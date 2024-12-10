@@ -1,3 +1,5 @@
-﻿  glad.c
+﻿  Source.cpp
+C:\Unreal Engine 5\Github\Folder-Game_Engine-2024\Folder-Game_Engine-2024\Source.cpp(51,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  LINK : C:\Unreal Engine 5\Github\Folder-Game_Engine-2024\x64\Debug\Folder-Game_Engine-2024.exe not found or not built by the last incremental link; performing full link
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Folder-Game_Engine-2024.vcxproj -> C:\Unreal Engine 5\Github\Folder-Game_Engine-2024\x64\Debug\Folder-Game_Engine-2024.exe
