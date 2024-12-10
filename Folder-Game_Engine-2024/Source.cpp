@@ -9,6 +9,11 @@
 #include <cstdlib>
 #include <unordered_map>
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -25,6 +30,8 @@ const float RECT_HEIGHT = 900.0f;
 const float FRICTION = 0.997f;
 const float RESTITUTION = 0.75f;
 const float SPEED_MULTIPLIER = 5.0f;
+
+ECSManager* ecsInstance; // Global pointer for Lua
 
 float randomPerturbation() 
 {
@@ -97,6 +104,22 @@ public:
         return transforms.positions.size();
     }
 };
+
+int lua_createEntity(lua_State* L) 
+{
+    float x = (float)luaL_checknumber(L, 1);
+    float y = (float)luaL_checknumber(L, 2);
+    float radius = (float)luaL_checknumber(L, 3);
+
+    ecsInstance->addEntity(x, y, radius, true);
+    lua_pushinteger(L, (int)ecsInstance->getEntityCount() - 1);
+    return 1;
+}
+
+void registerLuaFunctions(lua_State* L) 
+{
+    lua_register(L, "createEntity", lua_createEntity);
+}
 
 // Systems
 class PhysicsSystem 
@@ -267,6 +290,19 @@ int main()
         startY -= 50;
     }
 
+    // Global ECSManager Instance for Lua
+    ecsInstance = &ecsManager;
+
+    // Initialize Lua
+    lua_State* L = luaL_newstate();
+    luaL_openlibs(L);
+    registerLuaFunctions(L);
+
+    // Load and Execute Lua Script
+    if (luaL_dofile(L, "script.lua")) {
+        std::cerr << "Error: " << lua_tostring(L, -1) << "\n";
+    }
+
     double previousTime = glfwGetTime();
     const double targetFrameTime = 1.0 / 360.0;
 
@@ -288,6 +324,7 @@ int main()
         }
     }
 
+    lua_close(L);
     glfwTerminate();
     return 0;
 }
