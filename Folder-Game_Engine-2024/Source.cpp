@@ -1,3 +1,7 @@
+//sources
+// Lesson Notes
+// Assistance from ChatGPT
+
 #include <iostream>
 #include <vector>
 #include <cmath>
